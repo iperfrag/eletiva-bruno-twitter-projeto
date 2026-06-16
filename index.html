@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Mini X</title>
+
+<style>
+
+:root{
+    --bg:#000;
+    --card:#16181c;
+    --border:#2f3336;
+    --text:#e7e9ea;
+    --text2:#71767b;
+    --blue:#1d9bf0;
+    --red:#f4212e;
+    --green:#00ba7c;
+}
+
+.light{
+    --bg:#ffffff;
+    --card:#ffffff;
+    --border:#eff3f4;
+    --text:#0f1419;
+    --text2:#536471;
+    --blue:#1d9bf0;
+    --red:#f4212e;
+    --green:#00ba7c;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+.container{
+    max-width:700px;
+    margin:auto;
+    min-height:100vh;
+    border-left:1px solid var(--border);
+    border-right:1px solid var(--border);
+}
+
+header{
+    position:sticky;
+    top:0;
+    z-index:999;
+    backdrop-filter:blur(12px);
+    background:rgba(0,0,0,.75);
+    border-bottom:1px solid var(--border);
+    padding:15px;
+}
+
+.light header{
+    background:rgba(255,255,255,.85);
+}
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    font-size:24px;
+    font-weight:bold;
+}
+
+.theme-btn{
+    border:none;
+    background:var(--blue);
+    color:white;
+    padding:8px 14px;
+    border-radius:999px;
+    cursor:pointer;
+}
+
+.composer{
+    border-bottom:1px solid var(--border);
+    padding:15px;
+}
+
+.user-row{
+    display:flex;
+    gap:10px;
+    margin-bottom:12px;
+}
+
+.avatar{
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    background:var(--blue);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    font-weight:bold;
+    font-size:18px;
+    flex-shrink:0;
+}
+
+.input-area{
+    width:100%;
+}
+
+input[type=text]{
+    width:100%;
+    background:transparent;
+    border:none;
+    outline:none;
+    color:var(--text);
+    padding:10px 0;
+    font-size:16px;
+}
+
+textarea{
+    width:100%;
+    min-height:120px;
+    resize:none;
+    border:none;
+    outline:none;
+    background:transparent;
+    color:var(--text);
+    font-size:22px;
+    line-height:1.4;
+}
+
+.search-box{
+    border-top:1px solid var(--border);
+    padding-top:10px;
+    margin-top:10px;
+}
+
+.actions{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:10px;
+}
+
+.counter{
+    color:var(--text2);
+    font-size:14px;
+}
+
+.counter.limit{
+    color:var(--red);
+}
+
+.post-btn{
+    background:var(--blue);
+    border:none;
+    color:white;
+    padding:10px 22px;
+    border-radius:999px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.post-btn:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+}
+
+.status{
+    margin:10px 15px;
+    padding:10px;
+    border-radius:10px;
+    display:none;
+}
+
+.success{
+    display:block;
+    background:rgba(0,186,124,.15);
+    color:var(--green);
+}
+
+.error{
+    display:block;
+    background:rgba(244,33,46,.15);
+    color:var(--red);
+}
+
+.loading{
+    display:block;
+    background:rgba(29,155,240,.15);
+    color:var(--blue);
+}
+
+.feed{
+    width:100%;
+}
+
+.post{
+    border-bottom:1px solid var(--border);
+    padding:15px;
+}
+
+.post-top{
+    display:flex;
+    gap:10px;
+}
+
+.post-content{
+    flex:1;
+}
+
+.post-user{
+    font-weight:bold;
+}
+
+.post-date{
+    color:var(--text2);
+    font-size:13px;
+    margin-left:6px;
+}
+
+.post-text{
+    margin-top:8px;
+    white-space:pre-wrap;
+    word-break:break-word;
+    line-height:1.5;
+}
+
+.post-actions{
+    display:flex;
+    gap:25px;
+    margin-top:12px;
+}
+
+.action-btn{
+    background:none;
+    border:none;
+    color:var(--text2);
+    cursor:pointer;
+}
+
+.action-btn:hover{
+    color:var(--blue);
+}
+
+.comments{
+    margin-top:15px;
+}
+
+.comment{
+    border-top:1px solid var(--border);
+    padding-top:10px;
+    margin-top:10px;
+}
+
+.comment-form{
+    display:flex;
+    gap:10px;
+    margin-top:10px;
+}
+
+.comment-form input{
+    border:1px solid var(--border);
+    padding:10px;
+    border-radius:999px;
+}
+
+.comment-form button{
+    background:var(--blue);
+    color:white;
+    border:none;
+    border-radius:999px;
+    padding:0 15px;
+}
+
+.empty-feed{
+    text-align:center;
+    color:var(--text2);
+    padding:50px 20px;
+}
+
+@media(max-width:700px){
+
+    .container{
+        border:none;
+    }
+
+    textarea{
+        font-size:20px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+
+<div class="topbar">
+<div class="logo">𝕏 Mini</div>
+
+<button
+id="themeBtn"
+class="theme-btn">
+Tema
+</button>
+
+</div>
+
+</header>
+
+<div class="composer">
+
+<div class="user-row">
+
+<div class="avatar" id="myAvatar">
+?
+</div>
+
+<div class="input-area">
+
+<input
+id="username"
+type="text"
+maxlength="30"
+placeholder="Seu nome">
+
+<textarea
+id="postText"
+maxlength="280"
+placeholder="O que está acontecendo?">
+</textarea>
+
+</div>
+
+</div>
+
+<div class="actions">
+
+<div
+id="charCounter"
+class="counter">
+280
+</div>
+
+<button
+id="publishBtn"
+class="post-btn">
+Postar
+</button>
+
+</div>
+
+<div class="search-box">
+
+<input
+id="searchInput"
+type="text"
+placeholder="Pesquisar posts">
+
+</div>
+
+</div>
+
+<div
+id="status"
+class="status">
+</div>
+
+<div
+id="feed"
+class="feed">
+
+<div class="empty-feed">
+Carregando posts...
+</div>
+
+</div>
+
+</div>
+<script>
+
+/*
+ CONFIGURAÇÃO
+ Cole aqui a URL do Web App do Apps Script
+*/
+const CONFIG = {
+
+    WEB_APP_URL:
+    "COLE_AQUI_A_URL_DO_WEB_APP"
+
+};
+
+
+/*
+ ESTADO DA APLICAÇÃO
+*/
+
+let posts = [];
+
+let likedPosts = {};
+
+let currentSearch = "";
+
+
+
+/*
+ ELEMENTOS
+*/
+
+const username =
+document.getElementById("username");
+
+const postText =
+document.getElementById("postText");
+
+const publishBtn =
+document.getElementById("publishBtn");
+
+const feed =
+document.getElementById("feed");
+
+const statusBox =
+document.getElementById("status");
+
+const charCounter =
+document.getElementById("charCounter");
+
+const searchInput =
+document.getElementById("searchInput");
+
+const themeBtn =
+document.getElementById("themeBtn");
+
+const avatar =
+document.getElementById("myAvatar");
+
+
+
+/*
+ STATUS
+*/
+
+function showStatus(message,type){
+
+    statusBox.className =
+    "status " + type;
+
+    statusBox.innerHTML =
+    message;
+
+    setTimeout(()=>{
+
+        statusBox.className =
+        "status";
+
+    },4000);
+
+}
+
+
+
+
+/*
+ AVATAR
+*/
+
+username.addEventListener(
+"input",
+()=>{
+
+let name =
+username.value.trim();
+
+avatar.innerHTML =
+name
+? name.charAt(0).toUpperCase()
+: "?";
+
+});
+
+
+
+
+
+/*
+ CONTADOR
+*/
+
+postText.addEventListener(
+"input",
+()=>{
+
+
+let remaining =
+280 - postText.value.length;
+
+
+charCounter.innerHTML =
+remaining;
+
+
+if(remaining < 30){
+
+charCounter.classList.add(
+"limit"
+);
+
+}else{
+
+charCounter.classList.remove(
+"limit"
+);
+
+}
+
+
+});
+
+
+
+
+
+/*
+ JSONP ENGINE
+*/
+
+function jsonpRequest(params){
+
+return new Promise(
+(resolve,reject)=>{
+
+
+const callbackName =
+
+"callback_" +
+
+Date.now() +
+
+"_" +
+
+Math.random()
+.toString(36)
+.substring(2);
+
+
+
+const script =
+document.createElement(
+"script"
+);
+
+
+
+const timeout =
+setTimeout(()=>{
+
+
+cleanup();
+
+
+reject(
+new Error(
+"Tempo excedido"
+)
+);
+
+
+},15000);
+
+
+
+
+
+window[callbackName] =
+function(data){
+
+
+cleanup();
+
+resolve(data);
+
+
+};
+
+
+
+
+
+function cleanup(){
+
+
+clearTimeout(timeout);
+
+
+delete window[callbackName];
+
+
+if(script.parentNode){
+
+script.parentNode
+.removeChild(script);
+
+}
+
+
+}
+
+
+
+
+
+const query =
+new URLSearchParams(
+{
+
+...params,
+
+callback:
+callbackName
+
+});
+
+
+
+
+
+script.onerror =
+()=>{
+
+
+cleanup();
+
+
+reject(
+new Error(
+"Erro de conexão com servidor"
+)
+);
+
+
+};
+
+
+
+
+
+script.src =
+
+CONFIG.WEB_APP_URL +
+
+"?" +
+
+query.toString();
+
+
+
+
+
+document.body.appendChild(
+script
+);
+
+
+
+});
+
+
+}
+
+
+
+
+
+
+
+/*
+ TESTE DE SERVIÇO
+*/
+
+async function healthCheck(){
+
+try{
+
+
+let response =
+await jsonpRequest({
+
+action:"health"
+
+});
+
+
+
+console.log(
+response
+);
+
+
+
+}catch(error){
+
+
+showStatus(
+error.message,
+"error"
+);
+
+
+}
+
+
+}
+
+
+
+
+
+
+
+/*
+ CARREGAR POSTS
+*/
+
+async function loadPosts(){
+
+
+try{
+
+
+showStatus(
+"Carregando posts...",
+"loading"
+);
+
+
+
+let response =
+
+await jsonpRequest({
+
+action:"list"
+
+});
+
+
+
+
+if(!response.success){
+
+throw new Error(
+response.message
+);
+
+}
+
+
+
+posts =
+response.posts || [];
+
+
+
+renderFeed();
+
+
+
+
+statusBox.className =
+"status";
+
+
+
+}catch(error){
+
+
+showStatus(
+error.message,
+"error"
+);
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+/*
+ PUBLICAR POST
+*/
+
+
+async function createPost(){
+
+
+let user =
+username.value.trim();
+
+
+
+let text =
+postText.value.trim();
+
+
+
+if(!user){
+
+showStatus(
+"Digite seu nome",
+"error"
+);
+
+return;
+
+}
+
+
+
+if(!text){
+
+
+showStatus(
+"Digite uma mensagem",
+"error"
+);
+
+
+return;
+
+}
+
+
+
+
+
+publishBtn.disabled =
+true;
+
+
+
+try{
+
+
+showStatus(
+"Publicando...",
+"loading"
+);
+
+
+
+let response =
+
+await jsonpRequest({
+
+action:"add",
+
+user:user,
+
+text:text
+
+});
+
+
+
+
+
+if(!response.success){
+
+throw new Error(
+response.message
+);
+
+}
+
+
+
+
+
+postText.value =
+"";
+
+
+charCounter.innerHTML =
+280;
+
+
+
+showStatus(
+"Publicado!",
+"success"
+);
+
+
+
+await loadPosts();
+
+
+
+
+}catch(error){
+
+
+
+showStatus(
+error.message,
+"error"
+);
+
+
+
+}
+finally{
+
+
+publishBtn.disabled =
+false;
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+publishBtn.onclick =
+createPost;
+
+
+
+
+  <script>
+
+/*
+ RENDER DO FEED
+*/
+
+function renderFeed(){
+
+    let filtered =
+    posts.filter(post=>{
+
+        let text =
+        (
+        post.text +
+        " " +
+        post.user
+        )
+        .toLowerCase();
+
+
+        return text.includes(
+            currentSearch.toLowerCase()
+        );
+
+    });
+
+
+
+    if(filtered.length === 0){
+
+        feed.innerHTML =
+        `
+        <div class="empty-feed">
+            Nenhum post encontrado.
+        </div>
+        `;
+
+        return;
+
+    }
+
+
+
+    feed.innerHTML =
+    filtered.map(post=>{
+
+
+        let firstLetter =
+        post.user
+        .charAt(0)
+        .toUpperCase();
+
+
+
+        let liked =
+        likedPosts[post.id]
+        ? "❤️"
+        : "♡";
+
+
+
+        return `
+
+        <article class="post">
+
+
+        <div class="post-top">
+
+
+        <div class="avatar">
+
+        ${firstLetter}
+
+        </div>
+
+
+
+        <div class="post-content">
+
+
+        <div>
+
+        <span class="post-user">
+
+        ${escapeHTML(post.user)}
+
+        </span>
+
+
+        <span class="post-date">
+
+        ${formatDate(post.created)}
+
+        </span>
+
+
+        </div>
+
+
+
+        <div class="post-text">
+
+        ${escapeHTML(post.text)}
+
+        </div>
+
+
+
+
+        <div class="post-actions">
+
+
+        <button
+        class="action-btn"
+        onclick="likePost('${post.id}')">
+
+        ${liked}
+
+        ${post.likes || 0}
+
+        </button>
+
+
+
+
+        <button
+        class="action-btn"
+        onclick="toggleComments('${post.id}')">
+
+        💬
+
+        ${post.comments?.length || 0}
+
+        </button>
+
+
+        </div>
+
+
+
+        <div
+        id="comments-${post.id}"
+        class="comments"
+        style="display:none">
+
+        ${renderComments(post)}
+
+
+        </div>
+
+
+
+        </div>
+
+
+        </div>
+
+
+        </article>
+
+
+        `;
+
+
+
+    }).join("");
+
+
+
+}
+
+
+
+
+
+/*
+ ESCAPE HTML
+*/
+
+function escapeHTML(value){
+
+    return String(value)
+
+    .replaceAll(
+        "&",
+        "&amp;"
+    )
+
+    .replaceAll(
+        "<",
+        "&lt;"
+    )
+
+    .replaceAll(
+        ">",
+        "&gt;"
+    )
+
+    .replaceAll(
+        '"',
+        "&quot;"
+    )
+
+    .replaceAll(
+        "'",
+        "&#039;"
+    );
+
+}
+
+
+
+
+
+/*
+ DATA
+*/
+
+function formatDate(date){
+
+
+if(!date){
+
+return "";
+
+}
+
+
+let d =
+new Date(date);
+
+
+
+return d.toLocaleString(
+"pt-BR"
+);
+
+
+}
+
+
+
+
+
+/*
+ CURTIDA LOCAL
+*/
+
+function likePost(id){
+
+
+let post =
+posts.find(
+p=>p.id===id
+);
+
+
+
+if(!post){
+
+return;
+
+}
+
+
+
+
+if(likedPosts[id]){
+
+
+post.likes =
+Math.max(
+0,
+(post.likes||1)-1
+);
+
+
+delete likedPosts[id];
+
+
+
+}else{
+
+
+post.likes =
+(post.likes||0)+1;
+
+
+likedPosts[id]=true;
+
+
+}
+
+
+
+renderFeed();
+
+
+}
+
+
+
+
+
+
+
+/*
+ COMENTÁRIOS
+*/
+
+function toggleComments(id){
+
+
+let box =
+document.getElementById(
+"comments-"+id
+);
+
+
+
+if(box.style.display==="none"){
+
+
+box.style.display =
+"block";
+
+
+}else{
+
+
+box.style.display =
+"none";
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+function renderComments(post){
+
+
+
+let comments =
+post.comments || [];
+
+
+
+return `
+
+
+
+<div>
+
+
+${
+
+comments.map(c=>`
+
+
+<div class="comment">
+
+
+<b>
+
+${escapeHTML(c.user)}
+
+</b>
+
+
+<br>
+
+
+${escapeHTML(c.text)}
+
+
+
+</div>
+
+
+`).join("")
+
+}
+
+
+
+<div class="comment-form">
+
+
+<input
+
+id="comment-${post.id}"
+
+placeholder="Responder..."
+
+>
+
+
+
+<button
+
+onclick="addComment('${post.id}')"
+
+>
+
+Enviar
+
+</button>
+
+
+
+</div>
+
+
+</div>
+
+
+
+`;
+
+}
+
+
+
+
+
+
+
+
+async function addComment(id){
+
+
+
+let input =
+document.getElementById(
+"comment-"+id
+);
+
+
+
+let text =
+input.value.trim();
+
+
+
+if(!text){
+
+return;
+
+}
+
+
+
+
+let user =
+username.value.trim();
+
+
+
+if(!user){
+
+showStatus(
+"Digite seu nome antes",
+"error"
+);
+
+return;
+
+}
+
+
+
+try{
+
+
+let response =
+await jsonpRequest({
+
+action:"comment",
+
+id:id,
+
+user:user,
+
+text:text
+
+});
+
+
+
+
+if(response.success){
+
+
+input.value="";
+
+
+loadPosts();
+
+
+}
+
+
+
+}catch(error){
+
+
+showStatus(
+error.message,
+"error"
+);
+
+
+}
+
+
+}
+
+
+
+
+
+
+
+/*
+ PESQUISA
+*/
+
+
+searchInput.addEventListener(
+
+"input",
+
+()=>{
+
+
+currentSearch =
+searchInput.value;
+
+
+renderFeed();
+
+
+}
+
+);
+
+
+
+
+
+
+
+/*
+ TEMA
+*/
+
+
+themeBtn.onclick = ()=>{
+
+
+document.body.classList.toggle(
+"light"
+);
+
+
+};
+
+
+
+
+
+
+
+
+/*
+ AUTO UPDATE
+*/
+
+
+setInterval(()=>{
+
+
+loadPosts();
+
+
+},30000);
+
+
+
+
+
+
+/*
+ START
+*/
+
+
+healthCheck();
+
+
+loadPosts();
+
+
+
+</script>
+
+
+</body>
+
+</html>
